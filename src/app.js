@@ -8,6 +8,10 @@ const auth = require('./auth.js');
 
 const app = express();
 
+const UserSchema = mongoose.model('UserSchema');
+const ArticleSchema = mongoose.model('ArticleSchema');
+
+
 app.set('view engine', 'hbs');
 
 app.use(express.static(path.join(__dirname, 'public')));
