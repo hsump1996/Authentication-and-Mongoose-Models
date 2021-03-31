@@ -6,7 +6,7 @@ const User = mongoose.model('User');
 function register(username, email, password, errorCallback, successCallback) {
 
   //Check the length of the username and password passed in; they should both be greater than or equal to 8
-  if (username.length() < 8 || password.length < 8) {
+  if (username.length < 8 || password.length < 8) {
 
     const id_pw_short_error = {message: "USERNAME PASSWORD TOO SHORT"};
     console.log(id_pw_short_error);
@@ -27,53 +27,82 @@ function register(username, email, password, errorCallback, successCallback) {
 
       const user_exists_error = {message: "USERNAME ALREADY EXISTS"};
       console.log(user_exists_error);
-      errorCallback(user_exists_error) 
+      errorCallback(user_exists_error);
 
     // Case where the user doesn't exist yet  
     } else {
-
-        bcrypt.hash(password, 10, function(err, hash) {
-        
+      
+      bcrypt.hash(password, 10, function(err, hash) {
+      
         if (err) {
 
           console.log(err);
-
+          
+        // Creates a new userr
         } else {
 
           // Instantiate a new User object
-          let newUser = new User();
-          newUser.name = username;
-          newUser.email = email;
-          newUser.password = hash;
-
+          let newUser = new User({username: username, password: hash, email: email});
           // Calls save
           newUser.save((err)=>{
-            
-
+              
             //If error, calls the errorCallback with an object that contains the key, message, and a generic error message, 
             //DOCUMENT SAVE ERROR, as the value
             if (err) {
               const save_error = {message: "DOCUMENT SAVE ERROR"};
               console.log(save_error);
-              errorCallback()
-            
+              errorCallback(save_error);
+                
             // If the save succeeds, call the successCallback function with the newly saved user
             } else {
-              
               successCallback(newUser);
-            
+                
             }
-        });
+          });
         }
       });
     }
   });
-
-
-
 }
 
 function login(username, password, errorCallback, successCallback) {
+
+  User.findOne({username: username}, (err, user, count) => {
+    
+    if (err) {
+
+      console.log(err);
+
+    } else if (!err && user) {
+      
+      // compare with form password!
+      bcrypt.compare(password, user.password, (err, passwordMatch) => {
+        // regenerate session if passwordMatch is true
+
+        if (err) {
+
+          console.log(err);
+        
+        } else if (passwordMatch) {
+          successCallback(user);
+        
+        } else {
+          const password_no_match = {message: "PASSWORDS DO NOT MATCH"};
+          console.log(password_no_match);
+          errorCallback(password_no_match);
+        }
+      });
+    
+    } else {
+      const user_not_found = {message: "USER NOT FOUND"};
+      console.log(user_not_found);
+      errorCallback(user_not_found);
+    }
+   
+  });
+
+
+
 }
 
 function startAuthenticatedSession(req, user, cb) {

@@ -16,7 +16,7 @@
     "eslint": "^7.23.0",
     "eslint-plugin-mocha": "^8.1.0",
     "mocha": "^5.2.0",
-    "mock-require": "^3.0.1"
+    "mock-require": "^3.0.3"
   },
   "name": "hsump1996-homework06",
   "version": "1.0.0",
