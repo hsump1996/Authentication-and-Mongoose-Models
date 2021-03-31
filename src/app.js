@@ -23,6 +23,8 @@ app.use(session({
 }));
 
 app.get('/', (req, res) => {
+
+
 });
 
 app.get('/article/add', (req, res) => {
@@ -36,6 +38,7 @@ app.post('/article/add', (req, res) => {
 // });
 
 app.get('/register', (req, res) => {
+    res.render('register');
 });
 
 app.post('/register', (req, res) => {

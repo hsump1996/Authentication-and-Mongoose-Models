@@ -6,6 +6,15 @@
 	<link rel="stylesheet" href="/css/site.css" type="text/css" media="screen" title="no title" charset="utf-8">
 </head>
 <body>
+	<header>
+		<a href= "/">Home</a>
+		{{#if user}}
+		<a href= "/article/add">Add an article</a>
+		{{else}}
+		<a href= "/login">Login</a> or
+		<a href= "/register">Register</a>
+		{{/if}}
+	</header>
 	{{{body}}}
 </body>
 </html>

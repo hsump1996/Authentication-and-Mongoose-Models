@@ -69,23 +69,29 @@ function login(username, password, errorCallback, successCallback) {
 
   User.findOne({username: username}, (err, user, count) => {
     
+
+    //Case 1: when an error occurred
     if (err) {
 
       console.log(err);
 
+    //Case 2: when there is a matching user
     } else if (!err && user) {
       
       // compare with form password!
       bcrypt.compare(password, user.password, (err, passwordMatch) => {
         // regenerate session if passwordMatch is true
 
+        //Case a: Password Error
         if (err) {
 
           console.log(err);
         
+        //Case b: When there is a matching password
         } else if (passwordMatch) {
           successCallback(user);
         
+        //Case c: when the password does not match
         } else {
           const password_no_match = {message: "PASSWORDS DO NOT MATCH"};
           console.log(password_no_match);
@@ -93,6 +99,8 @@ function login(username, password, errorCallback, successCallback) {
         }
       });
     
+
+    //Case 3: when the User cannot be found
     } else {
       const user_not_found = {message: "USER NOT FOUND"};
       console.log(user_not_found);
@@ -106,6 +114,18 @@ function login(username, password, errorCallback, successCallback) {
 }
 
 function startAuthenticatedSession(req, user, cb) {
+
+  req.session.regenerate((err) => {
+    
+    if (!err) {   
+      req.session.username = user; 
+      req.session.email = user.email;
+    
+    } else {
+    // log out errorcall callback with error
+      console.log(err);
+    }
+  });
 }
 
 module.exports = {

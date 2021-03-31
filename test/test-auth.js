@@ -26,83 +26,83 @@ function failOnSuccess(done, user) {
 }
 
 describe('auth', function() {
-//   describe('register (success)', function() {
-//     it('should call the success callback by passing in a new user object if the registration is successful', function(done) {
+  describe('register (success)', function() {
+    it('should call the success callback by passing in a new user object if the registration is successful', function(done) {
 
-//       const username = '"save":"success","count":0';
-//       const password = 'success-test';
-//       const email = 'success@test.test';
+      const username = '"save":"success","count":0';
+      const password = 'success-test';
+      const email = 'success@test.test';
 
-//       function success(user) { 
-//         // eslint-disable-next-line no-unused-expressions
-//         expect(user).to.not.be.empty;
-//         done();
-//       }
+      function success(user) { 
+        // eslint-disable-next-line no-unused-expressions
+        expect(user).to.not.be.empty;
+        done();
+      }
 
-//       auth.register(username, email, password, failOnError.bind(null, done), success);
-//     });
+      auth.register(username, email, password, failOnError.bind(null, done), success);
+    });
 
-//     it('should call the success callback with a user object such that the username and email are the same as those supplied to the User constructor if registration is successful', function(done) {
+    it('should call the success callback with a user object such that the username and email are the same as those supplied to the User constructor if registration is successful', function(done) {
 
-//       const username = '"save":"success","count":0';
-//       const email = 'success@test.test';
-//       const password = 'success-test';
+      const username = '"save":"success","count":0';
+      const email = 'success@test.test';
+      const password = 'success-test';
 
-//       function success(user) { 
-//         expect(user.username).to.equal(username);
-//         expect(user.email).to.equal(email);
-//         done();
-//       }
+      function success(user) { 
+        expect(user.username).to.equal(username);
+        expect(user.email).to.equal(email);
+        done();
+      }
 
-//       auth.register(username, email, password, failOnError.bind(null, done), success);
-//     });
+      auth.register(username, email, password, failOnError.bind(null, done), success);
+    });
 
-//     it('should call the success callback with a user object such that the password is a hash that matches the hashed original password if the registration is successful', function(done) {
+    it('should call the success callback with a user object such that the password is a hash that matches the hashed original password if the registration is successful', function(done) {
 
-//       const username = '"save":"success","count":0'; 
-//       const email = 'success@test.test';
-//       const password = 'success-test';
+      const username = '"save":"success","count":0'; 
+      const email = 'success@test.test';
+      const password = 'success-test';
 
-//       function success(user) { 
-//         bcrypt.compare(password, user.password, (err, passwordMatch) => {
-//           expect(passwordMatch).to.equal(true);
-//           done(); 
-//         });
-//       }
-//       auth.register(username, email, password, failOnError.bind(null, done), success);
-//     });
-//   });
+      function success(user) { 
+        bcrypt.compare(password, user.password, (err, passwordMatch) => {
+          expect(passwordMatch).to.equal(true);
+          done(); 
+        });
+      }
+      auth.register(username, email, password, failOnError.bind(null, done), success);
+    });
+  });
 
-//   describe('register (error)', function() {
+  describe('register (error)', function() {
 
-//     it('should call error callback if registration did not succeed because of duplicate username', function(done) {
+    it('should call error callback if registration did not succeed because of duplicate username', function(done) {
 
-//       const username = '"save":"success","count":1';
-//       const email = 'success@test.test';
-//       const password = 'success-test';
+      const username = '"save":"success","count":1';
+      const email = 'success@test.test';
+      const password = 'success-test';
 
-//       function error(obj) { 
-//         expect(obj.message).to.equal('USERNAME ALREADY EXISTS');
-//         done();
-//       }
+      function error(obj) { 
+        expect(obj.message).to.equal('USERNAME ALREADY EXISTS');
+        done();
+      }
 
-//       auth.register(username, email, password, error, failOnSuccess.bind(null, done));
-//     });
+      auth.register(username, email, password, error, failOnSuccess.bind(null, done));
+    });
 
-//     it('should call error callback if registration did not succeed because of database save error (missing field, etc.)', function(done) {
+    it('should call error callback if registration did not succeed because of database save error (missing field, etc.)', function(done) {
 
-//       const username = '"save":"error","count":0';
-//       const email = 'success@test.test';
-//       const password = 'success-test';
+      const username = '"save":"error","count":0';
+      const email = 'success@test.test';
+      const password = 'success-test';
 
-//       function error(obj) { 
-//         expect(obj.message.startsWith('DOCUMENT SAVE ERROR')).to.equal(true);
-//         done();
-//       }
+      function error(obj) { 
+        expect(obj.message.startsWith('DOCUMENT SAVE ERROR')).to.equal(true);
+        done();
+      }
 
-//       auth.register(username, email, password, error, failOnSuccess.bind(null, done));
-//     });
-//   });
+      auth.register(username, email, password, error, failOnSuccess.bind(null, done));
+    });
+  });
   describe('login (success)', function() {
     it('should call the success callback by passing in the user object associated with the succesful login', function(done) {
 
@@ -147,18 +147,18 @@ describe('auth', function() {
       auth.login(username, password, error, failOnSuccess.bind(null, done));
     });
   });
-  // describe('startAuthenticatedSession', function() {
+  describe('startAuthenticatedSession', function() {
 
-  //   it('should add the user object to req.session', function(done) {
-  //     const req = {session: {regenerate: () => {done();}}};
-  //     const user = {username: 'username'};
-  //     expect(req.session.hasOwnProperty('user')).to.equal(false);
+    it('should add the user object to req.session', function(done) {
+      const req = {session: {regenerate: () => {done();}}};
+      const user = {username: 'username'};
+      expect(req.session.hasOwnProperty('user')).to.equal(false);
 
-  //     // eslint-disable-next-line no-undef, no-unused-vars
-  //     auth.startAuthenticatedSession(req, user, (err) => { 
-  //       expect(req.session.hasOwnProperty('user')).to.equal(true);
-  //       // done();
-  //     });
-  //   });
-  // });
+      // eslint-disable-next-line no-undef, no-unused-vars
+      auth.startAuthenticatedSession(req, user, (err) => { 
+        expect(req.session.hasOwnProperty('user')).to.equal(true);
+        // done();
+      });
+    });
+  });
 });
