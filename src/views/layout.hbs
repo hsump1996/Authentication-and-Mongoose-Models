@@ -9,7 +9,8 @@
 	<header>
 		<a href= "/">Home</a>
 		{{#if user}}
-		<a href= "/article/add">Add an article</a>
+		<p>Logged in as {{user.username}}</p>
+		<a href= "/article/add">Add</a>
 		{{else}}
 		<a href= "/login">Login</a> or
 		<a href= "/register">Register</a>
