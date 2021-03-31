@@ -27,6 +27,7 @@ app.use(session({
 app.use((req, res, next) => {
     // now you can use {{user}} in your template!
     res.locals.user = req.session.user;
+    console.log(res.locals.user);
     next();
 });
 
@@ -35,6 +36,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/article/add', (req, res) => {
+
+    if(req.session.user.username) {
+
+        res.render('article-add');
+
+    } else {
+        res.redirect('/login');
+    }
+
 });
 
 app.post('/article/add', (req, res) => {
@@ -55,6 +65,7 @@ app.post('/register', (req, res) => {
     function success(user) {
         auth.startAuthenticatedSession(req, user, function cb() {
             res.redirect('/');
+            console.log(user);
         });
     };
     
@@ -67,12 +78,29 @@ app.post('/register', (req, res) => {
 });
 
 
-
-
 app.get('/login', (req, res) => {
+
+    res.render('login');
+
 });
 
 app.post('/login', (req, res) => {
+    
+    // successfully logged in!
+    function success(user) {
+        // start an authenticated session and redirect to another page
+        auth.startAuthenticatedSession(req, user, function cb() {
+            res.redirect('/');
+        });
+    }
+    
+    // render a template containing an error message
+    function error(err) {
+        res.render('login', {message: err.message});
+    }
+      
+    auth.login(req.body.username, req.body.password, error, success);
+
 });
 
 app.listen(3000);
