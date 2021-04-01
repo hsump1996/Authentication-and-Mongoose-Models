@@ -8,9 +8,8 @@ const auth = require('./auth.js');
 
 const app = express();
 
-
-const UserSchema = mongoose.model('User');
 const ArticleSchema = mongoose.model('Article');
+const UserSchema = mongoose.model('User');
 
 
 app.set('view engine', 'hbs');
@@ -27,32 +26,86 @@ app.use(session({
 app.use((req, res, next) => {
     // now you can use {{user}} in your template!
     res.locals.user = req.session.user;
-    console.log(res.locals.user);
     next();
 });
 
+
+
 app.get('/', (req, res) => {
-    res.render('home');
+
+    ArticleSchema.find({}, (err, article) => {
+
+        if (err) {
+            console.log(err);
+        
+        } else {
+            res.render('home', {'article': article});
+        }
+    });
 });
+
 
 app.get('/article/add', (req, res) => {
 
-    if(req.session.user.username) {
-
+    //Make sure that only logged in users can reach this url
+    if(req.session.user) {
+        
+        //Renders a template, article-add.hbs that contains a form
         res.render('article-add');
 
+
     } else {
+
+        //Redirect to /login if the user is not logged in
         res.redirect('/login');
     }
-
 });
 
 app.post('/article/add', (req, res) => {
+
+    //Make sure that only logged in users can reach this url
+    if(req.session.user) {        
+        //Create a new Article and associate it with a user
+        const new_article = new ArticleSchema({title: req.body.title, url: req.body.url, description: req.body.description, user: req.session.user['_id']});
+
+        new_article.save(err => {
+
+            //Case where there's an error and re-renders the article-add.hbs
+            if (err) {
+                console.log(err);
+                res.render('article-add', {message: err.message});
+            
+            //Case where the article / user is saved successfully and redirected to the home page
+            } else {
+                res.redirect('/');
+            }
+        });
+    
+    //Redirect to /login if the user is not logged in
+    } else {
+        res.redirect('/login');
+    }
 });
 
 // come up with a url for /article/slug-name!
-// app.get('add url here!', (req, res) => {
-// });
+app.get('/article/:slug', (req, res) => {
+
+    //Gets the value of query string parameters
+    const slug = req.params.slug;
+
+    ArticleSchema.findOne({slug: slug}).populate('user').exec((err, article) => {
+
+        console.log(article);
+
+        if (err) {
+            console.log(err);
+        
+        } else {
+            res.render('article-detail', {'title': article.title, 'url': article.url, 'username': article.user['username'], 'description': article.description});
+        }
+    });
+
+});
 
 
 //Render a template, register.hbs that contains a form register.hbs
@@ -65,7 +118,6 @@ app.post('/register', (req, res) => {
     function success(user) {
         auth.startAuthenticatedSession(req, user, function cb() {
             res.redirect('/');
-            console.log(user);
         });
     };
     

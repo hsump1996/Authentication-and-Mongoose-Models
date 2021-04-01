@@ -1,0 +1,9 @@
+<div class="container">
+<ol>
+
+{{#each article}}
+<li><a href="{{this.url}}">{{this.title}} </a> - <a href="/article/{{this.slug}}">- detail</a></li>
+
+{{/each}}
+</ol>
+</div>

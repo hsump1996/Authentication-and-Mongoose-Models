@@ -114,7 +114,7 @@ function startAuthenticatedSession(req, user, cb) {
   req.session.regenerate((err) => {
     
     if (!err) {   
-      req.session.user = user.username; 
+      req.session.user = user; 
       req.session.email = user.email;
       cb();
 
