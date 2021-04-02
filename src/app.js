@@ -9,8 +9,6 @@ const auth = require('./auth.js');
 const app = express();
 
 const ArticleSchema = mongoose.model('Article');
-const UserSchema = mongoose.model('User');
-
 
 app.set('view engine', 'hbs');
 
@@ -66,9 +64,9 @@ app.post('/article/add', (req, res) => {
     //Make sure that only logged in users can reach this url
     if(req.session.user) {        
         //Create a new Article and associate it with a user
-        const new_article = new ArticleSchema({title: req.body.title, url: req.body.url, description: req.body.description, user: req.session.user['_id']});
+        const article = new ArticleSchema({title: req.body.title, url: req.body.url, description: req.body.description, user: req.session.user['_id']});
 
-        new_article.save(err => {
+        article.save(err => {
 
             //Case where there's an error and re-renders the article-add.hbs
             if (err) {
@@ -119,11 +117,11 @@ app.post('/register', (req, res) => {
         auth.startAuthenticatedSession(req, user, function cb() {
             res.redirect('/');
         });
-    };
+    }
     
     function error(err) {
         res.render('register', {message: err.message});
-    };
+    }
 
     auth.register(req.body.username, req.body.email, req.body.password, error, success);
         
