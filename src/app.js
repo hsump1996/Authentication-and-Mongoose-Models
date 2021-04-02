@@ -93,8 +93,6 @@ app.get('/article/:slug', (req, res) => {
 
     ArticleSchema.findOne({slug: slug}).populate('user').exec((err, article) => {
 
-        console.log(article);
-
         if (err) {
             console.log(err);
         
